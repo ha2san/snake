@@ -65,4 +65,8 @@ public class Snake {
         corps.avance(this.direction);
     }
 
+    public void isRunning() {
+        mange();
+        avance();
+    }
 }

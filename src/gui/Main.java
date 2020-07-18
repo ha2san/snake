@@ -21,9 +21,9 @@ public class Main extends Application {
     public static final double RADIUS = 25;
     private static final int FPS_BASE = (int) RADIUS / 3;
     private static final Paint WHITE = Paint.valueOf("White");
-    private static final Color COLOR_RANDOM = Color.RED;
-    private static final Color LIGHTGREEN = Color.LIGHTGREEN;
-    private static final Paint BLACK = Paint.valueOf("Black");
+    private static final Color FOOD_COLOR = Color.RED;
+    private static final Color SNAKE_COLOR = Color.LIGHTGREEN;
+    private static final Paint BACKGROUND = Paint.valueOf("Black");
     private static int foodMove = 0;
     private static final int difficultyFood_base = 6;
     private static int difficultyFood = difficultyFood_base;
@@ -72,25 +72,24 @@ public class Main extends Application {
             public void handle(long now) {
                 if (!pause) {
                     compte++;
-                    if (compte == FPS) {
-                        if (difficulty) {
+                    if (compte == FPS) {//FPS define the speed of the game
+                        if (difficulty) {//the food will move if the difficulty is on
                             if (foodMove == difficultyFood) {
                                 snake.foodMove();
                                 foodMove = 0;
                             }
                             foodMove++;
                         }
-                        gc.setFill(BLACK);
+                        gc.setFill(BACKGROUND);
                         gc.fillRect(0, 0, WIDTH, HEIGHT);
-                        snake.mange();
-                        snake.avance();
-                        draw(gc);
-                        lose();
+                        snake.isRunning();//Allow the snake to move and to eat
+                        draw(gc);//draw the snake and the food
+                        lose();//restart the party
                         compte = 0;
 
                     }
                 } else {
-                    gc.fillText("Paused", 30, 90);
+                    gc.fillText("Paused", 30, 90);//when the p key is pressed the game is paused
                 }
 
             }
@@ -103,7 +102,7 @@ public class Main extends Application {
                 maxScore = score;
             }
             snake.lose();
-            FPS = FPS_BASE;
+            FPS = FPS_BASE;//the basic speed (if the snake eats, the speed increase)
             snake = new Snake();
         }
     }
@@ -115,10 +114,10 @@ public class Main extends Application {
         gc.fillText("Square mode : " + textBool(square), 30, 70);
 
 
-        gc.setFill(COLOR_RANDOM);
+        gc.setFill(FOOD_COLOR);
 
         gc.fillOval(snake.getFood().getX(), snake.getFood().getY(), RADIUS, RADIUS);
-        gc.setFill(LIGHTGREEN);
+        gc.setFill(SNAKE_COLOR);
         for (Point point : snake.getPosition()) {
             if (!square) {
                 gc.fillOval(point.getX(), point.getY(), RADIUS, RADIUS);
