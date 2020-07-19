@@ -82,7 +82,6 @@ public class Main extends Application {
                 if (!pause) {
                     compte++;
                     if (compte == FPS) {//FPS define the speed of the game
-                        System.out.println(FPS);
                         if (difficulty) {//the food will move if the difficulty is on
                             if (foodMove == difficultyFood) {
                                 snake.foodMove();
