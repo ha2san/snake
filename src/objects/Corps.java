@@ -13,11 +13,13 @@ public class Corps {
         corps.add(new Point(pos_x, pos_y));
     }
 
-    public int size(){
+    public int size() {
         return corps.size();
     }
 
     public boolean lose() {
+        if (Main.invinsible)
+            return false;
 
         for (int i = 1; i < corps.size(); i++) {
             if (corps.get(0).equals(corps.get(i))) {
@@ -53,7 +55,7 @@ public class Corps {
                 x = -2 * Main.RADIUS;
                 break;
         }
-        Point point = Point.Point(corps.get(corps.size() - 1), 2*x, 2*y);
+        Point point = Point.Point(corps.get(corps.size() - 1), 2 * x, 2 * y);
         corps.add(point);
         Main.score++;
     }
@@ -61,7 +63,7 @@ public class Corps {
     public void avance(Direction direction) {
         corps.get(0).avance(direction);
         for (int i = 1; i < corps.size(); i++) {
-            corps.get(i).suit(corps.get(i-1));
+            corps.get(i).suit(corps.get(i - 1));
         }
     }
 }

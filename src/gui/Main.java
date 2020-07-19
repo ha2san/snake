@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -12,6 +13,9 @@ import javafx.stage.Stage;
 import objects.Direction;
 import objects.Point;
 import objects.Snake;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main extends Application {
@@ -24,10 +28,13 @@ public class Main extends Application {
     private static final Color FOOD_COLOR = Color.RED;
     private static final Color SNAKE_COLOR = Color.LIGHTGREEN;
     private static final Paint BACKGROUND = Paint.valueOf("Black");
+    private static final int FPS_CHEAT = 30;
+    private static final int FPS_SPEED = 2;
     private static int foodMove = 0;
     private static final int difficultyFood_base = 6;
-    private static int difficultyFood = difficultyFood_base;
+    private static final int difficultyFood = difficultyFood_base;
     public static int FPS = FPS_BASE;
+    public StringBuilder stringBuilder = new StringBuilder();
     private int compte = 0;
     private Snake snake;
     public static int score;
@@ -35,7 +42,9 @@ public class Main extends Application {
     private boolean pause = false;
     private boolean difficulty = false;
     private boolean square = false;
-    private int code = 0;
+    private boolean cheatCode = false;
+    public static boolean invinsible = false;
+    private List<String> codeList= new ArrayList<>();
 
 
     @Override
@@ -73,6 +82,7 @@ public class Main extends Application {
                 if (!pause) {
                     compte++;
                     if (compte == FPS) {//FPS define the speed of the game
+                        System.out.println(FPS);
                         if (difficulty) {//the food will move if the difficulty is on
                             if (foodMove == difficultyFood) {
                                 snake.foodMove();
@@ -89,7 +99,7 @@ public class Main extends Application {
 
                     }
                 } else {
-                    gc.fillText("Paused", 30, 90);//when the p key is pressed the game is paused
+                    gc.fillText("Paused", 30, 110);//when the p key is pressed the game is paused
                 }
 
             }
@@ -112,7 +122,13 @@ public class Main extends Application {
         gc.fillText("Score : " + score + "       Max Score : " + maxScore, 30, 30);
         gc.fillText("Difficulty Mode : " + textBool(difficulty), 30, 50);
         gc.fillText("Square mode : " + textBool(square), 30, 70);
-
+        gc.fillText("Cheat Code  " + textBool(cheatCode), 30, 90);
+        gc.fillText(stringBuilder.toString(),300,30);
+        int i = 0;
+        for(String s : codeList){
+            gc.fillText(s,300,50+i*20);
+            i++;
+        }
 
         gc.setFill(FOOD_COLOR);
 
@@ -132,69 +148,68 @@ public class Main extends Application {
 
 
         canvas.setOnKeyPressed(event -> {
+            if (cheatCode) {
+                if (!event.getCode().equals(KeyCode.ENTER))
+                    stringBuilder.append(event.getText());
+            }
             switch (event.getCode()) {
                 case RIGHT:
                     if (snake.direction != Direction.Gauche)
                         snake.setDirection(Direction.Droite);
-                    code = 0;
                     break;
                 case LEFT:
                     if (snake.direction != Direction.Droite)
                         snake.setDirection(Direction.Gauche);
-                    code = 0;
                     break;
                 case DOWN:
                     if (snake.direction != Direction.Haut)
                         snake.setDirection(Direction.Bas);
-                    code = 0;
                     break;
                 case UP:
                     if (snake.direction != Direction.Bas)
                         snake.setDirection(Direction.Haut);
-                    code = 0;
                     break;
                 case D:
                     difficulty = !difficulty;
-                    code = 0;
                     break;
                 case P:
-                    pause = !pause;
-                    code = 0;
-                    break;
-                case C:
-                    code++;
-                    break;
-                case H:
-                    if (code == 1) {
-                        code++;
-                    } else {
-                        code = 0;
-                    }
-                    break;
-                case E:
-                    if (code == 2) {
-                        code++;
-                    } else {
-                        code = 0;
-                    }
-                    break;
-                case A:
-                    if (code == 3) {
-                        code++;
-                    } else {
-                        code = 0;
-                    }
-                    break;
-                case T:
-                    if (code == 4) {
-                        snake.eat();
-                        code = 0;
-                    } else {
-                        code = 0;
-                    }
+                    if (!cheatCode)
+                        pause = !pause;
                     break;
                 case S:
                     square = !square;
+                    break;
+                case C:
+                    cheatCode = !cheatCode;
+                    if (!cheatCode)
+                        stringBuilder = new StringBuilder();
+                case ENTER:
+                    switch (stringBuilder.toString()) {
+                        case "grow":
+                            snake.eat();
+                            break;
+                        case "slowmo":
+                            compte = 0;
+                            FPS = FPS_CHEAT;
+                            break;
+                        case "speed":
+                            compte = 0;
+                            FPS = FPS_SPEED;
+                            break;
+                        case "fps":
+                            compte = 0;
+                            FPS = FPS_BASE;
+                            break;
+                        case "invinsible":
+                            invinsible = !invinsible;
+                            if(invinsible)
+                                codeList.add("invinsible");
+                            else
+                                codeList.remove("invinsible");
+                    }
+                    stringBuilder = new StringBuilder();
+                    break;
+                default:
                     break;
 
 
