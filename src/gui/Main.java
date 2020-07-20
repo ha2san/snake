@@ -139,12 +139,21 @@ public class Main extends Application {
 
         gc.fillOval(snake.getFood().getX(), snake.getFood().getY(), RADIUS, RADIUS);
         gc.setFill(SNAKE_COLOR);
+        int i1 = 0;
         for (Point point : snake.getPosition()) {
-            if (!square) {
-                gc.fillOval(point.getX(), point.getY(), RADIUS, RADIUS);
-            } else {
-                gc.fillRect(point.getX(), point.getY(), RADIUS, RADIUS);
+            double x = point.getX();
+            double y = point.getY();
+            if(snake.direction.equals(Direction.Droite) || snake.direction.equals(Direction.Gauche)){
+                y+=(RADIUS-size(i1))/2;
+            }else {
+                x+=(RADIUS-size(i1))/2;
             }
+            if (!square) {
+                gc.fillOval(x, y, size(i1), size(i1));
+            } else {
+                gc.fillRect(x, y, size(i1), size(i1));
+            }
+            i1++;
         }
     }
 
@@ -245,6 +254,9 @@ public class Main extends Application {
             return "On";
         else
             return "Off";
+    }
+    private double size(double i){
+        return RADIUS*(0.5*(2-i/snake.getPosition().size()));
     }
 
     public static void main(String[] args) {
