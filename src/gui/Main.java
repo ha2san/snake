@@ -20,8 +20,8 @@ import java.util.List;
 
 public class Main extends Application {
 
-    public static final int WIDTH = 600;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 1000;
+    public static final int HEIGHT = 1000;
     public static final double RADIUS = 25;
     private static final int FPS_BASE = (int) RADIUS / 3;
     private static final Paint WHITE = Paint.valueOf("White");
@@ -47,6 +47,7 @@ public class Main extends Application {
     private final List<String> codeList = new ArrayList<>();
     private boolean slowmo = false;
     private boolean speed = false;
+    private boolean changeSize = false;
 
 
     @Override
@@ -139,22 +140,43 @@ public class Main extends Application {
 
         gc.fillOval(snake.getFood().getX(), snake.getFood().getY(), RADIUS, RADIUS);
         gc.setFill(SNAKE_COLOR);
-        int i1 = 0;
+        double i1 = 0;
         for (Point point : snake.getPosition()) {
+            changeColor(gc, i1);
             double x = point.getX();
             double y = point.getY();
-            if(snake.direction.equals(Direction.Droite) || snake.direction.equals(Direction.Gauche)){
-                y+=(RADIUS-size(i1))/2;
-            }else {
-                x+=(RADIUS-size(i1))/2;
+            if (changeSize) {
+                switch (snake.direction) {
+                    case Gauche:
+                        y += (RADIUS - size(i1, true)) / 2;
+                        x += (RADIUS - size(i1, changeSize)) / 2;
+                        break;
+                    case Haut:
+                    case Bas:
+                        x += (RADIUS - size(i1, true)) / 2;
+                        y += (RADIUS - size(i1, changeSize)) / 2;
+                        break;
+                    case Droite:
+                        y += (RADIUS - size(i1, true)) / 2;
+                        break;
+                }
+
             }
             if (!square) {
-                gc.fillOval(x, y, size(i1), size(i1));
+                gc.fillOval(x, y, size(i1, changeSize), size(i1, changeSize));
             } else {
-                gc.fillRect(x, y, size(i1), size(i1));
+                gc.fillRect(x, y, size(i1, changeSize), size(i1, changeSize));
             }
             i1++;
+
         }
+    }
+
+    private void changeColor(GraphicsContext gc, double i1) {
+        double red = color(SNAKE_COLOR.getRed(), i1, snake.getPosition().size());
+        double green = color(SNAKE_COLOR.getGreen(), i1, snake.getPosition().size());
+        double blue = color(SNAKE_COLOR.getBlue(), i1, snake.getPosition().size());
+        gc.setFill(Color.color(red, green, blue));
     }
 
 
@@ -192,6 +214,9 @@ public class Main extends Application {
                     break;
                 case S:
                     square = !square;
+                    break;
+                case SPACE:
+                    changeSize = !changeSize;
                     break;
                 case C:
                     cheatCode = !cheatCode;
@@ -255,8 +280,16 @@ public class Main extends Application {
         else
             return "Off";
     }
-    private double size(double i){
-        return RADIUS*(0.5*(2-i/snake.getPosition().size()));
+
+    private double color(double color,double i1,double max){
+        return color * (1-(i1/max)*(color-1)/(color));
+    }
+
+    private double size(double i, boolean bool) {
+        if (bool)
+            return RADIUS * (0.5 * (2 - i / snake.getPosition().size()));
+        else
+            return RADIUS;
     }
 
     public static void main(String[] args) {
