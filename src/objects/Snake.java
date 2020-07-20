@@ -36,7 +36,6 @@ public class Snake {
 
     public void foodMove() {
         this.food.move();
-        System.out.printf("x : %f, y: %f %n", food.getX(), food.getY());
     }
 
     public void mange() {

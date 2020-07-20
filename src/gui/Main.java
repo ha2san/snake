@@ -20,8 +20,8 @@ import java.util.List;
 
 public class Main extends Application {
 
-    public static final int WIDTH = 1000;
-    public static final int HEIGHT = 1000;
+    public static final int WIDTH = 600;
+    public static final int HEIGHT = 600;
     public static final double RADIUS = 25;
     private static final int FPS_BASE = (int) RADIUS / 3;
     private static final Paint WHITE = Paint.valueOf("White");
@@ -44,7 +44,9 @@ public class Main extends Application {
     private boolean square = false;
     private boolean cheatCode = false;
     public static boolean invinsible = false;
-    private List<String> codeList= new ArrayList<>();
+    private final List<String> codeList = new ArrayList<>();
+    private boolean slowmo = false;
+    private boolean speed = false;
 
 
     @Override
@@ -110,6 +112,8 @@ public class Main extends Application {
             if (maxScore < score) {
                 maxScore = score;
             }
+            speed = false;
+            slowmo = false;
             snake.lose();
             FPS = FPS_BASE;//the basic speed (if the snake eats, the speed increase)
             snake = new Snake();
@@ -122,10 +126,12 @@ public class Main extends Application {
         gc.fillText("Difficulty Mode : " + textBool(difficulty), 30, 50);
         gc.fillText("Square mode : " + textBool(square), 30, 70);
         gc.fillText("Cheat Code  " + textBool(cheatCode), 30, 90);
-        gc.fillText(stringBuilder.toString(),300,30);
+        gc.fillText(stringBuilder.toString(), 300, 30);
+
+
         int i = 0;
-        for(String s : codeList){
-            gc.fillText(s,300,50+i*20);
+        for (String s : codeList) {
+            gc.fillText(s, 300, 50 + i * 20);
             i++;
         }
 
@@ -183,17 +189,26 @@ public class Main extends Application {
                     if (!cheatCode)
                         stringBuilder = new StringBuilder();
                 case ENTER:
+
                     switch (stringBuilder.toString()) {
                         case "grow":
                             snake.eat();
                             break;
                         case "slowmo":
                             compte = 0;
-                            FPS = FPS_CHEAT;
+                            slowmo = !slowmo;
+                            if (slowmo)
+                                FPS = FPS_CHEAT;
+                            else
+                                FPS = FPS_BASE;
                             break;
                         case "speed":
                             compte = 0;
-                            FPS = FPS_SPEED;
+                            speed = !speed;
+                            if (speed)
+                                FPS = FPS_SPEED;
+                            else
+                                FPS = FPS_BASE;
                             break;
                         case "fps":
                             compte = 0;
@@ -201,11 +216,10 @@ public class Main extends Application {
                             break;
                         case "invinsible":
                             invinsible = !invinsible;
-                            if(invinsible)
-                                codeList.add("invinsible");
-                            else
-                                codeList.remove("invinsible");
                     }
+                    mode(slowmo, "Mode Slow-motion activated");
+                    mode(speed, "Mode speed activated");
+                    mode(invinsible, "Mode invinsible activated");
                     stringBuilder = new StringBuilder();
                     break;
                 default:
@@ -215,6 +229,15 @@ public class Main extends Application {
             }
         });
 
+    }
+
+    private void mode(boolean bool, String mode) {
+        if (bool) {
+            if (!codeList.contains(mode)) {
+                codeList.add(mode);
+            }
+        } else
+            codeList.remove(mode);
     }
 
     private String textBool(boolean bool) {
