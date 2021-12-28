@@ -18,8 +18,13 @@ public class Corps {
     }
 
     public boolean lose() {
-        if (Main.invinsible)
+        if (Main.invinsible){
+            if(corps.get(0).getX() < 0) corps.get(0).setX(Main.WIDTH-1); ;
+            if(corps.get(0).getY() < 0) corps.get(0).setY(Main.HEIGHT-1); ;
+            if(corps.get(0).getX() >= Main.WIDTH) corps.get(0).setX(0); ;
+            if(corps.get(0).getY() >= Main.HEIGHT) corps.get(0).setY(0); ;
             return false;
+        }
 
         for (int i = 1; i < corps.size(); i++) {
             if (corps.get(0).equals(corps.get(i))) {
@@ -42,18 +47,10 @@ public class Corps {
         double y = 0;
 
         switch (direction) {
-            case Droite:
-                x = 2 * Main.RADIUS;
-                break;
-            case Bas:
-                y = -2 * Main.RADIUS;
-                break;
-            case Haut:
-                y = 2 * Main.RADIUS;
-                break;
-            case Gauche:
-                x = -2 * Main.RADIUS;
-                break;
+            case Droite -> x = 2 * Main.RADIUS;
+            case Bas -> y = -2 * Main.RADIUS;
+            case Haut -> y = 2 * Main.RADIUS;
+            case Gauche -> x = -2 * Main.RADIUS;
         }
         Point point = Point.Point(corps.get(corps.size() - 1), 2 * x, 2 * y);
         corps.add(point);

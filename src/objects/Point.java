@@ -13,6 +13,8 @@ public class Point {
     public double getX() {
         return x;
     }
+    public void setX(double x) {this.x = x;}
+    public void setY(double y) {this.y = y;}
 
     public double getY() {
         return y;
@@ -83,18 +85,10 @@ public class Point {
 
     private void nouvellePosition(Direction direction) {
         switch (direction.getNumber()) {
-            case 0:
-                this.y -= Main.RADIUS;
-                break;
-            case 1:
-                this.y += Main.RADIUS;
-                break;
-            case 2:
-                this.x -= Main.RADIUS;
-                break;
-            case 3:
-                this.x += Main.RADIUS;
-                break;
+            case 0 -> this.y -= Main.RADIUS;
+            case 1 -> this.y += Main.RADIUS;
+            case 2 -> this.x -= Main.RADIUS;
+            case 3 -> this.x += Main.RADIUS;
         }
     }
 

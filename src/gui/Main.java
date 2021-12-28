@@ -147,18 +147,15 @@ public class Main extends Application {
             double y = point.getY();
             if (changeSize) {
                 switch (snake.direction) {
-                    case Gauche:
+                    case Gauche -> {
                         y += (RADIUS - size(i1, true)) / 2;
                         x += (RADIUS - size(i1, changeSize)) / 2;
-                        break;
-                    case Haut:
-                    case Bas:
+                    }
+                    case Haut, Bas -> {
                         x += (RADIUS - size(i1, true)) / 2;
                         y += (RADIUS - size(i1, changeSize)) / 2;
-                        break;
-                    case Droite:
-                        y += (RADIUS - size(i1, true)) / 2;
-                        break;
+                    }
+                    case Droite -> y += (RADIUS - size(i1, true)) / 2;
                 }
 
             }
@@ -225,31 +222,28 @@ public class Main extends Application {
                 case ENTER:
 
                     switch (stringBuilder.toString()) {
-                        case "grow":
-                            snake.eat();
-                            break;
-                        case "slowmo":
+                        case "grow" -> snake.eat();
+                        case "slowmo" -> {
                             compte = 0;
                             slowmo = !slowmo;
                             if (slowmo)
                                 FPS = FPS_CHEAT;
                             else
                                 FPS = FPS_BASE;
-                            break;
-                        case "speed":
+                        }
+                        case "speed" -> {
                             compte = 0;
                             speed = !speed;
                             if (speed)
                                 FPS = FPS_SPEED;
                             else
                                 FPS = FPS_BASE;
-                            break;
-                        case "fps":
+                        }
+                        case "fps" -> {
                             compte = 0;
                             FPS = FPS_BASE;
-                            break;
-                        case "invinsible":
-                            invinsible = !invinsible;
+                        }
+                        case "invinsible" -> invinsible = !invinsible;
                     }
                     mode(slowmo, "Mode Slow-motion activated");
                     mode(speed, "Mode speed activated");
